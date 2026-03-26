@@ -12,7 +12,7 @@
         font-family: 'JetBrains Mono', monospace;
         font-size: 14px;
         border-radius: var(--radius);
-        background: #272822; /* Monokai background */
+        background: #272822;
     }
     .code-editor-wrap {
         display: flex;
@@ -20,9 +20,9 @@
         overflow: hidden;
         border-radius: var(--radius);
         background: #272822;
-        padding: 0; /* Remove left padding previously used for line numbers */
+        padding: 0;
     }
-    #lineNumbers { display: none; } /* Hide old custom line numbers */
+    #lineNumbers { display: none; }
 </style>
 {% endblock %}
 
@@ -206,24 +206,13 @@
         indentUnit: 4,
         matchBrackets: true
     });
-
     cmEditor.setValue(starterCode.python);
 
     function changeLang() {
         const lang = document.getElementById('edLang').value;
-        // Map abstract language names to CodeMirror modes
-        const modeMap = {
-            'python': 'python',
-            'javascript': 'javascript',
-            'java': 'text/x-java',
-            'cpp': 'text/x-c++src'
-        };
+        const modeMap = { 'python': 'python', 'javascript': 'javascript', 'java': 'text/x-java', 'cpp': 'text/x-c++src' };
         cmEditor.setOption('mode', modeMap[lang] || 'python');
-
-        if (!currentProblem) {
-            cmEditor.setValue(starterCode[lang] || '');
-            return;
-        }
+        if (!currentProblem) { cmEditor.setValue(starterCode[lang] || ''); return; }
         const starter = (currentProblem.starter_code || {})[lang];
         cmEditor.setValue(starter || starterCode[lang] || '');
     }

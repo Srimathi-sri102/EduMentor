@@ -142,14 +142,12 @@ def generate_lesson():
 def save_course():
     data = request.json
     course_data = data.get('course', {})
-    comp = data.get('completed_lessons', [])
     c = Course(
         user_id=current_user.id,
         title=course_data.get('title', 'Untitled Course'),
         skill=course_data.get('skill', ''),
         level=course_data.get('level', ''),
         structure=json.dumps(course_data),
-        completed_lessons=json.dumps(comp),
         total_lessons=course_data.get('total_lessons', 0)
     )
     db.session.add(c)

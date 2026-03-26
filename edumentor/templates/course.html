@@ -465,9 +465,6 @@
                    document.head.appendChild(script);
                    window.confettiFired = true;
                    showToast('Congratulations! You earned the Course Champion badge! 🏆', 'success');
-                   if (!currentCourseId) {
-                       saveCourse();
-                   }
                 }
             }
         } else {
@@ -491,7 +488,7 @@
         try {
             const res = await fetch('/api/course/save', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ course: currentCourse, completed_lessons: completedLessons })
+                body: JSON.stringify({ course: currentCourse })
             });
             const data = await res.json();
             if (data.success) {
