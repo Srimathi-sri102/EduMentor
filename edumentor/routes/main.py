@@ -30,6 +30,21 @@ def dashboard():
 
     passed = CodingSession.query.filter_by(user_id=current_user.id, result='passed').count()
 
+    # Badge calculations
+    import json
+    all_courses = Course.query.filter_by(user_id=current_user.id).all()
+    completed_courses = 0
+    for c in all_courses:
+        try:
+            done = json.loads(c.completed_lessons or '[]')
+            if c.total_lessons and len(done) >= c.total_lessons:
+                completed_courses += 1
+        except Exception:
+            pass
+
+    all_quizzes = Quiz.query.filter_by(user_id=current_user.id).filter(Quiz.score.isnot(None)).all()
+    passed_quizzes = sum(1 for q in all_quizzes if q.total and (q.score / q.total) >= 0.7)
+
     stats = {
         'roadmaps': roadmap_count,
         'coding': coding_count,
@@ -39,4 +54,5 @@ def dashboard():
         'avg_score': round(avg_score, 1),
         'passed': passed,
     }
-    return render_template('dashboard.html', stats=stats, recent_quizzes=recent_quizzes)
+    return render_template('dashboard.html', stats=stats, recent_quizzes=recent_quizzes,
+                           completed_courses=completed_courses, passed_quizzes=passed_quizzes)
